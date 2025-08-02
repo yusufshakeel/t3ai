@@ -1,0 +1,52 @@
+{
+  "name": "t3ai",
+  "version": "0.1.0",
+  "description": "AI agent that plays Tic Tac Toe.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "bootstrap": "mkdir -p output",
+    "build": "tsup",
+    "all": "rm -rf dist && npm run precommit && npm run build",
+    "precommit": "npm run bootstrap && npm run lint",
+    "lint": "npm run lint:src && npm run lint:test",
+    "lint:src": "npx eslint -c .eslintrc.json src",
+    "lint:fix:src": "npx eslint --fix -c .eslintrc.json src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yusufshakeel/t3ai.git"
+  },
+  "keywords": [
+    "ai",
+    "ai-agent",
+    "javascript",
+    "nodejs"
+  ],
+  "author": "Yusuf Shakeel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yusufshakeel/t3ai/issues"
+  },
+  "homepage": "https://github.com/yusufshakeel/t3ai#readme",
+  "engines": {
+    "node": ">18.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
+    "eslint": "^8",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "madge": "^8.0.0",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
