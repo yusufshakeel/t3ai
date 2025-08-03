@@ -36,7 +36,6 @@ class NoviceTrainer {
         state = nextState;
       }
 
-      // Optionally print progress
       if (gameCount % 1000 === 0) {
         console.log(`Training ${gameCount} finished.`);
       }
