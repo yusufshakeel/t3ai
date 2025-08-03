@@ -15,7 +15,8 @@
     "precommit": "npm run bootstrap && npm run lint",
     "lint": "npm run lint:src && npm run lint:test",
     "lint:src": "npx eslint -c .eslintrc.json src",
-    "lint:fix:src": "npx eslint --fix -c .eslintrc.json src"
+    "lint:fix:src": "npx eslint --fix -c .eslintrc.json src",
+    "train:novice-agent": "sh train-novice-agent.sh"
   },
   "repository": {
     "type": "git",
