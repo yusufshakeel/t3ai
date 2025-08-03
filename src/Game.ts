@@ -1,10 +1,10 @@
-import { Board, Player, Winner } from './types/game.type';
+import { Board, PlayerName, Winner } from './types/game.type';
 import { Action, State } from './types/qtable.type';
 
 class Game {
   private done: boolean;
   private board: Board[];
-  private currentPlayer: Player;
+  private currentPlayer: PlayerName;
   private winner: Winner;
 
   constructor() {
@@ -22,11 +22,11 @@ class Game {
     return !this.done && this.board[action] === null;
   }
 
-  private switchCurrentPlayer() {
+  private switchCurrentPlayer(): void {
     this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
   }
 
-  private isCurrentPlayerWinning(player: Player): boolean {
+  private isCurrentPlayerWinning(player: PlayerName): boolean {
     const winningIndexTuples = [
       [0, 1, 2], // row 1
       [3, 4, 5], // row 2
@@ -46,7 +46,7 @@ class Game {
     return this.winner;
   }
 
-  getCurrentPlayer(): Player {
+  getCurrentPlayer(): PlayerName {
     return this.currentPlayer;
   }
 
@@ -72,7 +72,7 @@ class Game {
       .filter(idx => idx !== null) as Action[];
   }
 
-  makeMove(action: Action) {
+  makeMove(action: Action): void {
     if (this.isValidAction(action)) {
       this.board[action] = this.currentPlayer;
 
