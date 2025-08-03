@@ -24,19 +24,19 @@ class Configs {
   }
 
   public get winningPoints(): number {
-    return parseInt(process.env.T3AI_WINNING_POINTS || '1', 10);
+    return parseFloat(process.env.T3AI_WINNING_POINTS || '1');
   }
 
   public get losingPoints(): number {
-    return parseInt(process.env.T3AI_LOSING_POINTS || '-10', 10);
+    return parseFloat(process.env.T3AI_LOSING_POINTS || '-10');
   }
 
   public get drawPoints(): number {
-    return parseInt(process.env.T3AI_DRAW_POINTS || '0.5', 10);
+    return parseFloat(process.env.T3AI_DRAW_POINTS || '0.5');
   }
 
   public get gameNotOverYetPoints(): number {
-    return parseInt(process.env.T3AI_GAME_NOT_OVER_YET_POINTS || '0', 10);
+    return parseFloat(process.env.T3AI_GAME_NOT_OVER_YET_POINTS || '0');
   }
 
   public get agentType(): string {
