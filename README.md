@@ -15,7 +15,13 @@ npm run bootstrap
 npm i
 ```
 
+## Train
 
+* Novice model
+
+```shell
+npm run train:novice-agent
+```
 
 ## License
 
