@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "bootstrap": "mkdir -p output",
+    "bootstrap": "mkdir -p models",
     "build": "tsup",
     "all": "rm -rf dist && npm run precommit && npm run build",
     "precommit": "npm run bootstrap && npm run lint",
