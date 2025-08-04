@@ -65,6 +65,10 @@ class Agent {
     return this.qTable;
   }
 
+  setQTable(qTable: QTable): void {
+    this.qTable = qTable;
+  }
+
   getName(): PlayerName {
     return this.name;
   }
