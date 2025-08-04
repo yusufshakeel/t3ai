@@ -2,11 +2,12 @@ import Agent from '../Agent';
 import Game from '../Game';
 import Configs from '../configs';
 import { getReward } from '../helpers';
+import { GameSymbol } from '../types/game.type';
 
 class NoviceTrainer {
   static train() {
-    const playerX = new Agent('X');
-    const playerO = new Agent('O');
+    const playerX = new Agent(GameSymbol.X);
+    const playerO = new Agent(GameSymbol.O);
 
     console.log('Points', {
       win: Configs.winningPoints,
@@ -20,7 +21,9 @@ class NoviceTrainer {
       let state = game.reset();
 
       while (!game.isGameOver()) {
-        const currentAgent = game.getCurrentPlayer() === 'X' ? playerX : playerO;
+        const currentAgent = game.getCurrentPlayer() === GameSymbol.X
+          ? playerX
+          : playerO;
         const availableActions = game.getAvailableActions();
 
         const action = currentAgent.chooseAction(state, availableActions);

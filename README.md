@@ -23,6 +23,9 @@ npm i
 npm run train:novice-agent
 ```
 
+Configurations of the novice model are present
+inside the [train-novice-agent.sh](scripts/train-novice-agent.sh) file. 
+
 ## License
 
 It's free :smiley:

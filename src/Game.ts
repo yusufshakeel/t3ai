@@ -1,4 +1,4 @@
-import { Board, PlayerName, Winner } from './types/game.type';
+import { Board, GameSymbol, PlayerName, Winner } from './types/game.type';
 import { Action, State } from './types/qtable.type';
 
 class Game {
@@ -9,7 +9,7 @@ class Game {
 
   constructor() {
     this.board = Array(9).fill(null);
-    this.currentPlayer = 'X';
+    this.currentPlayer = GameSymbol.X;
     this.winner = null;
     this.done = false;
   }
@@ -23,7 +23,9 @@ class Game {
   }
 
   private switchCurrentPlayer(): void {
-    this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+    this.currentPlayer = this.currentPlayer === GameSymbol.X
+      ? GameSymbol.O
+      : GameSymbol.X;
   }
 
   private isCurrentPlayerWinning(player: PlayerName): boolean {
@@ -56,7 +58,7 @@ class Game {
 
   reset(): State {
     this.board = Array(9).fill(null);
-    this.currentPlayer = 'X';
+    this.currentPlayer = GameSymbol.X;
     this.winner = null;
     this.done = false;
     return this.getState();

@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+#############################################
+# Set the env variables
+#############################################
 export T3AI_AGENT_TYPE=novice
 export T3AI_NUMBER_OF_GAMES=100000
 export T3AI_WINNING_POINTS=1
@@ -12,8 +15,16 @@ export T3AI_EXPLORATION_CHANCE_EPSILON=1.0
 export T3AI_EXPLORATION_CHANCE_EPSILON_DECAY=0.999
 export T3AI_EXPLORATION_CHANCE_EPSILON_MIN=0.01
 
+#############################################
+# Train
+#############################################
+
 npm run bootstrap
 ts-node src/train.ts
+
+#############################################
+# Unset the env variables
+#############################################
 
 unset T3AI_AGENT_TYPE
 unset T3AI_NUMBER_OF_GAMES

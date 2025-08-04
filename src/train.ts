@@ -15,7 +15,7 @@ async function trainAgent() {
     qTable = NoviceTrainer.train();
   }
 
-  await fs.writeFile(filePath, JSON.stringify(qTable, null, 2));
+  await fs.writeFile(filePath, JSON.stringify(qTable));
 
   console.log(`QTable saved to ${filePath}`);
   console.log('Training completed!');
