@@ -1,3 +1,5 @@
+import { TrainingPhase } from '../types/training.type';
+
 class Configs {
   public get learningRateAlpha(): number {
     return parseFloat(process.env.T3AI_LEARNING_RATE_ALPHA || '0.1');
@@ -41,6 +43,10 @@ class Configs {
 
   public get agentType(): string {
     return process.env.T3AI_AGENT_TYPE || 'novice';
+  }
+
+  public get trainingPhases(): TrainingPhase[] {
+    return JSON.parse(process.env.T3AI_TRAINING_PHASES || '{}');
   }
 }
 

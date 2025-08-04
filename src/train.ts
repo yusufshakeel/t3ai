@@ -1,8 +1,9 @@
 import fs from 'fs/promises';
-import NoviceTrainer from './trainers/NoviceTrainer';
 import Configs from './configs';
 import { AgentType } from './types/agent.type';
 import { QTable } from './types/qtable.type';
+import NoviceTrainer from './trainers/NoviceTrainer';
+import BeginnerTrainer from './trainers/BeginnerTrainer';
 
 async function trainAgent() {
   let qTable: QTable = {};
@@ -13,6 +14,8 @@ async function trainAgent() {
 
   if (Configs.agentType === AgentType.NOVICE) {
     qTable = NoviceTrainer.train();
+  } else if (Configs.agentType === AgentType.BEGINNER) {
+    qTable = BeginnerTrainer.train();
   }
 
   await fs.writeFile(filePath, JSON.stringify(qTable));

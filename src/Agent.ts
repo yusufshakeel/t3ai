@@ -38,6 +38,29 @@ class Agent {
     });
   }
 
+  reconfigure(
+    alpha = Configs.learningRateAlpha,
+    gamma = Configs.discountFactorGamma,
+    epsilon = Configs.explorationChanceEpsilon,
+    epsilonDecay = Configs.explorationChanceEpsilonDecay,
+    epsilonMin = Configs.explorationChanceEpsilonMin
+  ): void {
+    this.alpha = alpha;
+    this.gamma = gamma;
+    this.epsilon = epsilon;
+    this.epsilonDecay = epsilonDecay;
+    this.epsilonMin = epsilonMin;
+
+    console.log('Agent reconfigured.', {
+      name: this.name,
+      alpha,
+      gamma,
+      epsilon,
+      epsilonDecay,
+      epsilonMin
+    });
+  }
+
   getQTable(): QTable {
     return this.qTable;
   }

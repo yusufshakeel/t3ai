@@ -1,3 +1,4 @@
 export enum AgentType {
-    'NOVICE'= 'novice'
+    'NOVICE'= 'novice',
+    'BEGINNER'= 'beginner',
 }
