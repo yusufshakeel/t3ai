@@ -34,6 +34,9 @@ class BeginnerTrainer {
         phase.epsilonMin
       );
 
+      playerX.printConfig();
+      playerO.printConfig();
+
       playGames(phase.numberOfGames, playerX, playerO, `[Beginner - ${phase.name}]`);
     });
 

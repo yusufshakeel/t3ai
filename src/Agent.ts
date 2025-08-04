@@ -27,15 +27,16 @@ class Agent {
     this.epsilon = epsilon;
     this.epsilonDecay = epsilonDecay;
     this.epsilonMin = epsilonMin;
+  }
 
-    console.log('Agent created.', {
-      name,
-      alpha,
-      gamma,
-      epsilon,
-      epsilonDecay,
-      epsilonMin
-    });
+  printConfig(): void {
+    console.log('Agent configuration:');
+    console.log(`Name: ${this.name}`);
+    console.log(`Alpha: ${this.alpha}`);
+    console.log(`Gamma: ${this.gamma}`);
+    console.log(`Epsilon: ${this.epsilon}`);
+    console.log(`Epsilon Decay: ${this.epsilonDecay}`);
+    console.log(`Epsilon Min: ${this.epsilonMin}`);
   }
 
   reconfigure(
@@ -50,15 +51,6 @@ class Agent {
     this.epsilon = epsilon;
     this.epsilonDecay = epsilonDecay;
     this.epsilonMin = epsilonMin;
-
-    console.log('Agent reconfigured.', {
-      name: this.name,
-      alpha,
-      gamma,
-      epsilon,
-      epsilonDecay,
-      epsilonMin
-    });
   }
 
   getQTable(): QTable {

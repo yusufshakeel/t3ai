@@ -15,6 +15,9 @@ class NoviceTrainer {
       gameNotOverYet: Configs.gameNotOverYetPoints
     });
 
+    playerX.printConfig();
+    playerO.printConfig();
+
     playGames(Configs.numberOfGames, playerX, playerO, '[Novice]');
 
     return playerX.getQTable();
