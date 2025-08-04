@@ -1,9 +1,7 @@
 import Agent from '../Agent';
-import Game from '../Game';
 import Configs from '../configs';
 import { GameSymbol } from '../types/game.type';
-import { State } from '../types/qtable.type';
-import { getReward } from '../helpers';
+import { playGames } from './common';
 
 class BeginnerTrainer {
   static train() {
@@ -36,33 +34,7 @@ class BeginnerTrainer {
         phase.epsilonMin
       );
 
-      for (let gameCount = 1; gameCount <= phase.numberOfGames; gameCount++) {
-        const game = new Game();
-        let state: State = game.reset();
-
-        while (!game.isGameOver()) {
-          const currentAgent = game.getCurrentPlayer() === GameSymbol.X
-            ? playerX
-            : playerO;
-          const availableActions = game.getAvailableActions();
-
-          const action = currentAgent.chooseAction(state, availableActions);
-          game.makeMove(action);
-
-          const nextState = game.getState();
-          const reward = getReward(game.getWinner(), currentAgent.getName());
-          const nextAvailable = game.getAvailableActions();
-
-          currentAgent.updateQTable(state, action, reward, nextState, nextAvailable);
-          currentAgent.decayEpsilon();
-
-          state = nextState;
-        }
-
-        if (gameCount % 1000 === 0) {
-          console.log(`Training ${gameCount} finished.`);
-        }
-      }
+      playGames(phase.numberOfGames, playerX, playerO, `[Beginner - ${phase.name}]`);
     });
 
     return playerX.getQTable();

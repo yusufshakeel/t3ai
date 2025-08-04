@@ -1,8 +1,7 @@
 import Agent from '../Agent';
-import Game from '../Game';
 import Configs from '../configs';
-import { getReward } from '../helpers';
 import { GameSymbol } from '../types/game.type';
+import { playGames } from './common';
 
 class NoviceTrainer {
   static train() {
@@ -16,33 +15,7 @@ class NoviceTrainer {
       gameNotOverYet: Configs.gameNotOverYetPoints
     });
 
-    for (let gameCount = 1; gameCount <= Configs.numberOfGames; gameCount++) {
-      const game = new Game();
-      let state = game.reset();
-
-      while (!game.isGameOver()) {
-        const currentAgent = game.getCurrentPlayer() === GameSymbol.X
-          ? playerX
-          : playerO;
-        const availableActions = game.getAvailableActions();
-
-        const action = currentAgent.chooseAction(state, availableActions);
-        game.makeMove(action);
-
-        const nextState = game.getState();
-        const reward = getReward(game.getWinner(), currentAgent.getName());
-        const nextAvailable = game.getAvailableActions();
-
-        currentAgent.updateQTable(state, action, reward, nextState, nextAvailable);
-        currentAgent.decayEpsilon();
-
-        state = nextState;
-      }
-
-      if (gameCount % 1000 === 0) {
-        console.log(`Training ${gameCount} finished.`);
-      }
-    }
+    playGames(Configs.numberOfGames, playerX, playerO, '[Novice]');
 
     return playerX.getQTable();
   }
