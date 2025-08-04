@@ -26,6 +26,11 @@ npm run train:novice-agent
 Configurations of the novice model are present
 inside the [train-novice-agent.sh](scripts/train-novice-agent.sh) file. 
 
+## Models
+
+The models will be generated inside the **models** folder after you run the
+training scripts.
+
 ## License
 
 It's free :smiley:
