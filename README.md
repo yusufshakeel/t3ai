@@ -17,14 +17,21 @@ npm i
 
 ## Train
 
-* Novice model
+### Novice model
+
+Configurations inside the [train-novice-agent.sh](scripts/train-novice-agent.sh) file.
 
 ```shell
 npm run train:novice-agent
 ```
 
-Configurations of the novice model are present
-inside the [train-novice-agent.sh](scripts/train-novice-agent.sh) file. 
+### Beginner model
+
+Configurations inside the [train-beginner-agent.sh](scripts/train-beginner-agent.sh) file.
+
+```shell
+npm run train:beginner-agent
+```
 
 ## Models
 
