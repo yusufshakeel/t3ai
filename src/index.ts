@@ -4,6 +4,7 @@ import Agent from './Agent';
 import Game from './Game';
 import { Action, QTable, State } from './types/qtable.type';
 import { GameSymbol, PlayerName } from './types/game.type';
+import { T3AI_BEGINNER_MODEL_FILE_NAME, T3AI_NOVICE_MODEL_FILE_NAME } from './constants';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -40,8 +41,8 @@ async function main() {
 
   const modelsDir = process.cwd() + '/models';
   const models = {
-    1: 't3ai-novice.json',
-    2: 't3ai-beginner.json'
+    1: T3AI_NOVICE_MODEL_FILE_NAME,
+    2: T3AI_BEGINNER_MODEL_FILE_NAME
   };
 
   const userSymbol = (await ask('Do you want to be X or O? ')).toUpperCase();

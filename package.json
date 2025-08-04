@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "play": "ts-node src/index.ts",
+    "benchmark": "ts-node src/benchmark.ts",
     "bootstrap": "mkdir -p models",
     "build": "tsup",
     "all": "rm -rf dist && npm run precommit && npm run build",

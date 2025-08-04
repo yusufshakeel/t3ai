@@ -15,7 +15,16 @@ npm run bootstrap
 npm i
 ```
 
+* Train models
+
+```shell
+npm run train:all
+```
+
 ## Train
+
+There are different types of models available, and you can train them using the
+following commands.
 
 ### Train all the models
 
@@ -44,10 +53,17 @@ npm run train:beginner-agent
 The models will be generated inside the **models** folder after you run the
 training scripts.
 
+## Benchmark
+
+Run the following command to benchmark the models.
+
+```shell
+npm run benchmark
+```
+
 ## Play
 
-You can play with the AI agent by running the following command. (Make sure to complete
-the above steps before playing.)
+You can play with the AI agent by running the following command.
 
 ```shell
 npm run play

@@ -4,12 +4,13 @@ import Agent from './Agent';
 import { GameSymbol } from './types/game.type';
 import Game from './Game';
 import { getRandomIndex } from './helpers';
+import { T3AI_BEGINNER_MODEL_FILE_NAME, T3AI_NOVICE_MODEL_FILE_NAME } from './constants';
 
 async function main() {
   const modelsDir = process.cwd() + '/models';
   const models = [
-    't3ai-novice.json',
-    't3ai-beginner.json'
+    T3AI_NOVICE_MODEL_FILE_NAME,
+    T3AI_BEGINNER_MODEL_FILE_NAME
   ];
   const numberOfGames = 10000;
 
