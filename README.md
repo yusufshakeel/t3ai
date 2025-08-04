@@ -17,6 +17,12 @@ npm i
 
 ## Train
 
+### Train all the models
+
+```shell
+npm run train:all
+```
+
 ### Novice model
 
 Configurations inside the [train-novice-agent.sh](scripts/train-novice-agent.sh) file.
@@ -37,6 +43,15 @@ npm run train:beginner-agent
 
 The models will be generated inside the **models** folder after you run the
 training scripts.
+
+## Play
+
+You can play with the AI agent by running the following command. (Make sure to complete
+the above steps before playing.)
+
+```shell
+npm run play
+```
 
 ## License
 
