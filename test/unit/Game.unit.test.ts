@@ -1,4 +1,4 @@
-import { Game } from '../../src';
+import Game from '../../src/Game';
 
 describe('Game', () => {
   let game: Game;
