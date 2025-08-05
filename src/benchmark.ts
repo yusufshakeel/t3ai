@@ -17,8 +17,6 @@ async function main() {
   const playerX = new Agent(GameSymbol.X);
 
   for (const model of models) {
-    console.log('Benchmarking', model, '...');
-
     const filePath = modelsDir + '/' + model;
     const qTable: QTable = JSON.parse(await fs.readFile(filePath, 'utf-8'));
 
@@ -53,7 +51,9 @@ async function main() {
       }
     }
 
-    console.log(`Benchmark against random player for agent ${model}:`);
+    console.log('======================================================');
+    console.log(` Benchmark ${model} against RANDOM player`);
+    console.log('======================================================');
     console.log(`Wins: ${win}`);
     console.log(`Losses: ${loss}`);
     console.log(`Draws: ${draw}`);
