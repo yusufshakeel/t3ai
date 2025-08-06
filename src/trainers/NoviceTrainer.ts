@@ -5,8 +5,11 @@ import { playGames } from './common';
 
 class NoviceTrainer {
   static train() {
-    const playerX = new Agent(GameSymbol.X);
-    const playerO = new Agent(GameSymbol.O);
+    const agentX = new Agent(GameSymbol.X);
+    const agentO = new Agent(GameSymbol.O);
+
+    agentX.setIsTraining(true);
+    agentO.setIsTraining(true);
 
     console.log('Points', {
       win: Configs.winningPoints,
@@ -15,12 +18,17 @@ class NoviceTrainer {
       gameNotOverYet: Configs.gameNotOverYetPoints
     });
 
-    playerX.printConfig();
-    playerO.printConfig();
+    agentX.printConfig();
+    agentO.printConfig();
 
-    playGames(Configs.numberOfGames, playerX, playerO, '[Novice]');
+    playGames(
+      Configs.numberOfGames,
+      agentX,
+      agentO,
+      '[Novice]'
+    );
 
-    return playerX.getQTable();
+    return [agentX.getQTable(), agentO.getQTable()];
   }
 }
 

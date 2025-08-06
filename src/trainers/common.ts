@@ -1,34 +1,38 @@
 import Game from '../Game';
 import { State } from '../types/qtable.type';
-import { GameSymbol } from '../types/game.type';
 import { getReward } from '../helpers';
 import Agent from '../Agent';
 
 export const playGames = (
   numberOfGames: number,
-  playerX: Agent,
-  playerO: Agent,
-  logPrefix: string
+  agent: Agent,
+  opponentAgent: Agent,
+  logPrefix: string,
+  isOpponentAgentLearningEnabled = true
 ): void => {
   for (let gameCount = 1; gameCount <= numberOfGames; gameCount++) {
     const game = new Game();
     let state: State = game.reset();
 
     while (!game.isGameOver()) {
-      const currentAgent = game.getCurrentPlayer() === GameSymbol.X
-        ? playerX
-        : playerO;
+      const currentAgent = game.getCurrentPlayerGameSymbol() === agent.getGameSymbol()
+        ? agent
+        : opponentAgent;
       const availableActions = game.getAvailableActions();
 
       const action = currentAgent.chooseAction(state, availableActions);
       game.makeMove(action);
 
       const nextState = game.getState();
-      const reward = getReward(game.getWinner(), currentAgent.getName());
+      const reward = getReward(game.getWinner(), currentAgent.getGameSymbol());
       const nextAvailable = game.getAvailableActions();
 
-      currentAgent.updateQTable(state, action, reward, nextState, nextAvailable);
-      currentAgent.decayEpsilon();
+      if (currentAgent.getGameSymbol() === agent.getGameSymbol()
+          || isOpponentAgentLearningEnabled
+      ) {
+        currentAgent.updateQTable(state, action, reward, nextState, nextAvailable);
+        currentAgent.decayEpsilon();
+      }
 
       state = nextState;
     }

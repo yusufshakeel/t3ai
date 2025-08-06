@@ -8,6 +8,9 @@ class BeginnerTrainer {
     const playerX = new Agent(GameSymbol.X);
     const playerO = new Agent(GameSymbol.O);
 
+    playerX.setIsTraining(true);
+    playerO.setIsTraining(true);
+
     console.log('Points', {
       win: Configs.winningPoints,
       loss: Configs.losingPoints,
@@ -37,10 +40,15 @@ class BeginnerTrainer {
       playerX.printConfig();
       playerO.printConfig();
 
-      playGames(phase.numberOfGames, playerX, playerO, `[Beginner - ${phase.name}]`);
+      playGames(
+        phase.numberOfGames,
+        playerX,
+        playerO,
+        `[Beginner - ${phase.name}]`
+      );
     });
 
-    return playerX.getQTable();
+    return [playerX.getQTable(), playerO.getQTable()];
   }
 }
 
