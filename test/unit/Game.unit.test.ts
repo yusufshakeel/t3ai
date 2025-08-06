@@ -15,7 +15,7 @@ describe('Game', () => {
 
   describe('getCurrentPlayer', () => {
     it('should return current player', () => {
-      expect(game.getCurrentPlayer()).toBe('X');
+      expect(game.getCurrentPlayerGameSymbol()).toBe('X');
     });
   });
 
@@ -54,14 +54,14 @@ describe('Game', () => {
     });
 
     it('should do nothing when the move is invalid', () => {
-      const initialPlayer = game.getCurrentPlayer();
+      const initialPlayer = game.getCurrentPlayerGameSymbol();
       const initialState = game.getState();
       const initialAvailableActions = game.getAvailableActions();
 
       game.makeMove(0);
       const newState = game.getState();
 
-      const newPlayer = game.getCurrentPlayer();
+      const newPlayer = game.getCurrentPlayerGameSymbol();
       game.makeMove(0);
       const stateAfterInvalidMove = game.getState();
       const newAvailableActions = game.getAvailableActions();
@@ -87,7 +87,7 @@ describe('Game', () => {
 
       expect(game.getWinner()).toBe('X');
       expect(game.isGameOver()).toBeTruthy();
-      expect(game.getCurrentPlayer()).toBe('X');
+      expect(game.getCurrentPlayerGameSymbol()).toBe('X');
       expect(game.getState()).toBe('XOXOXOX--');
       expect(game.getAvailableActions()).toStrictEqual([7,8]);
     });
@@ -105,7 +105,7 @@ describe('Game', () => {
 
       expect(game.getWinner()).toBeNull();
       expect(game.isGameOver()).toBeTruthy();
-      expect(game.getCurrentPlayer()).toBe('X');
+      expect(game.getCurrentPlayerGameSymbol()).toBe('X');
       expect(game.getState()).toBe('XOXOOXXXO');
       expect(game.getAvailableActions()).toStrictEqual([]);
     });

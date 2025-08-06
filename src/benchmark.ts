@@ -4,63 +4,162 @@ import Agent from './Agent';
 import { GameSymbol } from './types/game.type';
 import Game from './Game';
 import { getRandomIndex } from './helpers';
-import { T3AI_BEGINNER_MODEL_FILE_NAME, T3AI_NOVICE_MODEL_FILE_NAME } from './constants';
+import { oModels, T3AI_EXPERT_MODEL_O_FILE_NAME, T3AI_EXPERT_MODEL_X_FILE_NAME, xModels } from './constants';
+import { AgentType } from './types/agent.type';
 
-async function main() {
-  const modelsDir = process.cwd() + '/models';
-  const models = [
-    T3AI_NOVICE_MODEL_FILE_NAME,
-    T3AI_BEGINNER_MODEL_FILE_NAME
-  ];
-  const numberOfGames = 10000;
+const modelsDir = process.cwd() + '/models';
+const numberOfGames = 1000;
+const report: any[] = [];
 
-  const playerX = new Agent(GameSymbol.X);
+async function playAgainstRandomPlayer() {
+  const agent = new Agent(GameSymbol.O);
 
-  for (const model of models) {
-    const filePath = modelsDir + '/' + model;
-    const qTable: QTable = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+  const opponentGameSymbols = [GameSymbol.X, GameSymbol.O];
 
-    playerX.setQTable(qTable);
-    playerX.reconfigure(0.1, 0.99999, 0, 1, 1);
+  for (const opponentGameSymbol of opponentGameSymbols) {
+    const agentGameSymbol = opponentGameSymbol === GameSymbol.X
+      ? GameSymbol.O
+      : GameSymbol.X;
 
-    let win = 0, loss = 0, draw = 0;
+    const agentModels = agentGameSymbol === GameSymbol.X
+      ? xModels
+      : oModels;
 
-    for (let episode = 1; episode <= numberOfGames; episode++) {
-      const game = new Game();
-      game.reset();
+    for (const agentModel of agentModels) {
+      const filePath = modelsDir + '/' + agentModel.filename;
+      const qTable: QTable = JSON.parse(await fs.readFile(filePath, 'utf-8'));
 
-      while (!game.isGameOver()) {
-        const available = game.getAvailableActions();
+      agent.setGameSymbol(agentGameSymbol);
+      agent.setAgentType(agentModel.agentType);
+      agent.setQTable(qTable);
+      agent.reconfigure(0.1, 0.99999, 0, 0, 0);
 
-        if (game.getCurrentPlayer() === GameSymbol.X) {
-          const state = game.getState();
-          const action = playerX.chooseAction(state, available);
-          game.makeMove(action);
+      agent.printConfig();
+
+      let win = 0, loss = 0, draw = 0;
+
+      for (let episode = 1; episode <= numberOfGames; episode++) {
+        const game = new Game();
+        game.reset();
+
+        while (!game.isGameOver()) {
+          const available = game.getAvailableActions();
+
+          if (game.getCurrentPlayerGameSymbol() === agent.getGameSymbol()) {
+            const state = game.getState();
+            const action = agent.chooseAction(state, available);
+            game.makeMove(action);
+          } else {
+            const action = available[getRandomIndex(available)];
+            game.makeMove(action);
+          }
+        }
+
+        if (game.getWinner() === agent.getGameSymbol()) {
+          win++;
+        } else if (game.getWinner() === opponentGameSymbol) {
+          loss++;
         } else {
-          const action = available[getRandomIndex(available)];
-          game.makeMove(action);
+          draw++;
         }
       }
 
-      if (game.getWinner() === GameSymbol.X) {
-        win++;
-      } else if (game.getWinner() === GameSymbol.O) {
-        loss++;
-      } else {
-        draw++;
-      }
+      report.push({
+        model: agentModel.filename,
+        against: 'random player',
+        wins: win,
+        losses: loss,
+        draws: draw,
+        winRate: `${(win / numberOfGames * 100).toFixed(2)}%`,
+        lossRate: `${(loss / numberOfGames * 100).toFixed(2)}%`,
+        drawRate: `${(draw / numberOfGames * 100).toFixed(2)}%`
+      });
     }
-
-    console.log('======================================================');
-    console.log(` Benchmark ${model} against RANDOM player`);
-    console.log('======================================================');
-    console.log(`Wins: ${win}`);
-    console.log(`Losses: ${loss}`);
-    console.log(`Draws: ${draw}`);
-    console.log(`Win Rate: ${(win / numberOfGames * 100).toFixed(2)}%`);
-    console.log(`Draw Rate: ${(draw / numberOfGames * 100).toFixed(2)}%`);
-    console.log(`Loss Rate: ${(loss / numberOfGames * 100).toFixed(2)}%`);
   }
+}
+
+async function playAgainstExpertPlayer() {
+  const agent = new Agent(GameSymbol.O);
+  const opponentAgent = new Agent(GameSymbol.X);
+
+  const opponentGameSymbols = [GameSymbol.X, GameSymbol.O];
+  const opponentAgentModels = {
+    [GameSymbol.X]: { filename: T3AI_EXPERT_MODEL_X_FILE_NAME, agentType: AgentType.EXPERT },
+    [GameSymbol.O]: { filename: T3AI_EXPERT_MODEL_O_FILE_NAME, agentType: AgentType.EXPERT }
+  };
+
+  for (const opponentGameSymbol of opponentGameSymbols) {
+    const opponentAgentModel = opponentAgentModels[opponentGameSymbol];
+    const filePathOpponentModel = modelsDir + '/' + opponentAgentModel.filename;
+    const qTableOpponent: QTable = JSON.parse(await fs.readFile(filePathOpponentModel, 'utf-8'));
+
+    opponentAgent.setGameSymbol(opponentGameSymbol);
+    opponentAgent.setAgentType(opponentAgentModel.agentType);
+    opponentAgent.setQTable(qTableOpponent);
+    opponentAgent.reconfigure(0.1, 0.99999, 0, 0, 0);
+
+    const agentGameSymbol = opponentGameSymbol === GameSymbol.X
+      ? GameSymbol.O
+      : GameSymbol.X;
+
+    const agentModels = agentGameSymbol === GameSymbol.X
+      ? xModels
+      : oModels;
+
+    for (const agentModel of agentModels) {
+      const filePath = modelsDir + '/' + agentModel.filename;
+      const qTable: QTable = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+
+      agent.setGameSymbol(agentGameSymbol);
+      agent.setAgentType(agentModel.agentType);
+      agent.setQTable(qTable);
+      agent.reconfigure(0.1, 0.99999, 0, 0, 0);
+
+      agent.printConfig();
+
+      let win = 0, loss = 0, draw = 0;
+
+      for (let episode = 1; episode <= numberOfGames; episode++) {
+        const game = new Game();
+        game.reset();
+
+        while (!game.isGameOver()) {
+          const available = game.getAvailableActions();
+          const currentPlayerAgent = game.getCurrentPlayerGameSymbol() === agent.getGameSymbol()
+            ? agent
+            : opponentAgent;
+          const state = game.getState();
+          const action = currentPlayerAgent.chooseAction(state, available);
+          game.makeMove(action);
+        }
+
+        if (game.getWinner() === agent.getGameSymbol()) {
+          win++;
+        } else if (game.getWinner() === opponentGameSymbol) {
+          loss++;
+        } else {
+          draw++;
+        }
+      }
+
+      report.push({
+        model: agentModel.filename,
+        against: 'expert player',
+        wins: win,
+        losses: loss,
+        draws: draw,
+        winRate: `${(win / numberOfGames * 100).toFixed(2)}%`,
+        lossRate: `${(loss / numberOfGames * 100).toFixed(2)}%`,
+        drawRate: `${(draw / numberOfGames * 100).toFixed(2)}%`
+      });
+    }
+  }
+}
+
+async function main() {
+  await playAgainstRandomPlayer();
+  await playAgainstExpertPlayer();
+  console.table(report);
 }
 
 main().catch(console.error);
