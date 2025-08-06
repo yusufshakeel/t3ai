@@ -3,12 +3,12 @@
 #############################################
 # Set the env variables
 #############################################
-export T3AI_AGENT_TYPE=beginner
+export T3AI_AGENT_TYPE=expert
 read -r -d '' T3AI_TRAINING_PHASES <<'EOF'
 [
-  { "name": "explore", "numberOfGames": 100000, "alpha": 0.1, "gamma": 0.9, "epsilon": 1.0, "epsilonDecay": 1.0, "epsilonMin": 0.3 },
-  { "name": "learn", "numberOfGames": 2000000, "alpha": 0.1, "gamma": 0.9, "epsilon": 1.0, "epsilonDecay": 0.999999, "epsilonMin": 0.1 },
-  { "name": "fine-tune", "numberOfGames": 500000, "alpha": 0.1, "gamma": 0.9, "epsilon": 1.0, "epsilonDecay": 1.0, "epsilonMin": 0.1 }
+  { "name": "explore", "numberOfGames": 300000, "alpha": 0.1, "gamma": 0.999999999, "epsilon": 1.0, "epsilonDecay": 1.0, "epsilonMin": 0.5 },
+  { "name": "learn", "numberOfGames": 2000000, "alpha": 0.1, "gamma": 0.999999999, "epsilon": 1.0, "epsilonDecay": 0.999999999, "epsilonMin": 0.1 },
+  { "name": "fine-tune", "numberOfGames": 500000, "alpha": 0.1, "gamma": 0.999999999, "epsilon": 1.0, "epsilonDecay": 1.0, "epsilonMin": 0.1 }
 ]
 EOF
 export T3AI_TRAINING_PHASES
