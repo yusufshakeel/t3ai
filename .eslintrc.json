@@ -53,7 +53,8 @@
       {
         "allow": [
           "error",
-          "log"
+          "log",
+          "table"
         ]
       }
     ],
