@@ -99,7 +99,7 @@ async function main() {
   const aiType = (await ask('Select [1,2,3]: '));
 
   let modelPath: string = '';
-  if (aiType === '1' || aiType === '2') {
+  if (aiType === '1' || aiType === '2' || aiType === '3') {
     modelPath = modelsDir + '/' + models[aiType][aiSymbol === GameSymbol.X ? 0 : 1];
   } else {
     throw new Error('Invalid AI type');
