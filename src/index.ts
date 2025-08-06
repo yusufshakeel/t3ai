@@ -96,7 +96,7 @@ async function main() {
   const aiSymbol = userSymbol === GameSymbol.X ? GameSymbol.O : GameSymbol.X;
 
   console.log('Choose your AI opponent\n1. Novice\n2. Beginner\n3. Expert');
-  const aiType = (await ask('Select [1,3]: '));
+  const aiType = (await ask('Select [1,2,3]: '));
 
   let modelPath: string = '';
   if (aiType === '1' || aiType === '2') {
