@@ -48,6 +48,14 @@ Configurations inside the [train-beginner-agent.sh](scripts/train-beginner-agent
 npm run train:beginner-agent
 ```
 
+### Expert model
+
+Configurations inside the [train-expert-agent.sh](scripts/train-expert-agent.sh) file.
+
+```shell
+npm run train:expert-agent
+```
+
 ## Models
 
 The models will be generated inside the **models** folder after you run the
