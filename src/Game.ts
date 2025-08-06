@@ -1,15 +1,16 @@
-import { Board, GameSymbol, PlayerName, Winner } from './types/game.type';
+import { Board, GameSymbol, PlayerGameSymbol, Winner } from './types/game.type';
 import { Action, State } from './types/qtable.type';
+import { getStateFromBoard } from './helpers';
 
 class Game {
   private done: boolean;
   private board: Board[];
-  private currentPlayer: PlayerName;
+  private currentPlayerGameSymbol: PlayerGameSymbol;
   private winner: Winner;
 
   constructor() {
     this.board = Array(9).fill(null);
-    this.currentPlayer = GameSymbol.X;
+    this.currentPlayerGameSymbol = GameSymbol.X;
     this.winner = null;
     this.done = false;
   }
@@ -23,12 +24,12 @@ class Game {
   }
 
   private switchCurrentPlayer(): void {
-    this.currentPlayer = this.currentPlayer === GameSymbol.X
+    this.currentPlayerGameSymbol = this.currentPlayerGameSymbol === GameSymbol.X
       ? GameSymbol.O
       : GameSymbol.X;
   }
 
-  private isCurrentPlayerWinning(player: PlayerName): boolean {
+  public isPlayerWinning(playerGameSymbol: PlayerGameSymbol): boolean {
     const winningIndexTuples = [
       [0, 1, 2], // row 1
       [3, 4, 5], // row 2
@@ -40,16 +41,28 @@ class Game {
       [2, 4, 6]  // diagonal bottom left to top right
     ];
     return winningIndexTuples.some(tupleIndexes =>
-      tupleIndexes.every(index => this.board[index] === player)
+      tupleIndexes.every(index => this.board[index] === playerGameSymbol)
     );
+  }
+
+  setBoard(board: Board[]): void {
+    this.board = board;
+  }
+
+  getBoard(): Board[] {
+    return this.board;
+  }
+
+  setCurrentPlayerGameSymbol(currentPlayerGameSymbol: PlayerGameSymbol): void {
+    this.currentPlayerGameSymbol = currentPlayerGameSymbol;
   }
 
   getWinner(): Winner {
     return this.winner;
   }
 
-  getCurrentPlayer(): PlayerName {
-    return this.currentPlayer;
+  getCurrentPlayerGameSymbol(): PlayerGameSymbol {
+    return this.currentPlayerGameSymbol;
   }
 
   isGameOver(): boolean {
@@ -58,14 +71,14 @@ class Game {
 
   reset(): State {
     this.board = Array(9).fill(null);
-    this.currentPlayer = GameSymbol.X;
+    this.currentPlayerGameSymbol = GameSymbol.X;
     this.winner = null;
     this.done = false;
     return this.getState();
   }
 
   getState(): State {
-    return this.board.map(c => c ?? '-').join('');
+    return getStateFromBoard(this.board);
   }
 
   getAvailableActions(): Action[] {
@@ -76,10 +89,10 @@ class Game {
 
   makeMove(action: Action): void {
     if (this.isValidAction(action)) {
-      this.board[action] = this.currentPlayer;
+      this.board[action] = this.currentPlayerGameSymbol;
 
-      if (this.isCurrentPlayerWinning(this.currentPlayer)) {
-        this.winner = this.currentPlayer;
+      if (this.isPlayerWinning(this.currentPlayerGameSymbol)) {
+        this.winner = this.currentPlayerGameSymbol;
         this.done = true;
       } else if (this.isBoardFilled()) {
         this.done = true;
