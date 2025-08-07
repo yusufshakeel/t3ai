@@ -21,10 +21,10 @@
     "lint:fix:src": "npx eslint --fix -c .eslintrc.json src",
     "lint:test": "npx eslint -c .eslintrc.json test",
     "lint:fix:test": "npx eslint --fix -c .eslintrc.json test",
-    "train:all": "npm run train:novice-agent && npm run train:beginner-agent && npm run train:expert-agent",
+    "train:all": "npm run train:novice-agent && npm run train:beginner-agent && npm run train:learner-agent",
     "train:novice-agent": "sh scripts/train-novice-agent.sh",
     "train:beginner-agent": "sh scripts/train-beginner-agent.sh",
-    "train:expert-agent": "sh scripts/train-learner-agent.sh"
+    "train:learner-agent": "sh scripts/train-learner-agent.sh"
   },
   "repository": {
     "type": "git",
