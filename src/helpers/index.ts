@@ -4,14 +4,20 @@ import { State } from '../types/qtable.type';
 
 export const getRandomIndex = (arr: any[]) => Math.floor(Math.random() * arr.length);
 
-export const getReward = (winner: Winner, player: PlayerGameSymbol) => {
+export const getReward = (
+  winner: Winner,
+  player: PlayerGameSymbol,
+  numberOfPossibleActions: number
+) => {
   if (winner === null) {
     return Configs.drawPoints;
   }
   if (winner === undefined) {
     return Configs.gameNotOverYetPoints;
   }
-  return winner === player ? Configs.winningPoints : Configs.losingPoints;
+  return winner === player
+    ? Configs.winningPoints
+    : Configs.losingPoints - numberOfPossibleActions;
 };
 
 export const getBoardFromState = (state: State): Board[] =>

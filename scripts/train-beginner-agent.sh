@@ -6,9 +6,9 @@
 export T3AI_AGENT_TYPE=beginner
 read -r -d '' T3AI_TRAINING_PHASES <<'EOF'
 [
-  { "name": "explore", "numberOfGames": 100000, "alpha": 0.1, "gamma": 0.9, "epsilon": 1.0, "epsilonDecay": 1.0, "epsilonMin": 0.3 },
-  { "name": "learn", "numberOfGames": 2000000, "alpha": 0.1, "gamma": 0.9, "epsilon": 1.0, "epsilonDecay": 0.999999, "epsilonMin": 0.1 },
-  { "name": "fine-tune", "numberOfGames": 500000, "alpha": 0.1, "gamma": 0.9, "epsilon": 1.0, "epsilonDecay": 1.0, "epsilonMin": 0.1 }
+  { "name": "explore", "numberOfGames": 100000, "alpha": 0.1, "gamma": 0.95, "epsilon": 1.0, "epsilonDecay": 0.9995, "epsilonMin": 0.2 },
+  { "name": "learn", "numberOfGames": 500000, "alpha": 0.1, "gamma": 0.95, "epsilon": 0.2, "epsilonDecay": 0.999, "epsilonMin": 0.05 },
+  { "name": "fine-tune", "numberOfGames": 200000, "alpha": 0.1, "gamma": 0.95, "epsilon": 0.05, "epsilonDecay": 1.0, "epsilonMin": 0.05 }
 ]
 EOF
 export T3AI_TRAINING_PHASES

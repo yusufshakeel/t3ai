@@ -32,13 +32,11 @@ async function playAgainstRandomPlayer() {
       agent.setGameSymbol(agentGameSymbol);
       agent.setAgentType(agentModel.agentType);
       agent.setQTable(qTable);
-      agent.reconfigure(0.1, 0.99999, 0, 0, 0);
-
-      agent.printConfig();
+      agent.reconfigure(0.1, 0.95, 0, 0, 0);
 
       let win = 0, loss = 0, draw = 0;
 
-      for (let episode = 1; episode <= numberOfGames; episode++) {
+      for (let gameCount = 1; gameCount <= numberOfGames; gameCount++) {
         const game = new Game();
         game.reset();
 
@@ -96,7 +94,7 @@ async function playAgainstExpertPlayer() {
     opponentAgent.setGameSymbol(opponentGameSymbol);
     opponentAgent.setAgentType(opponentAgentModel.agentType);
     opponentAgent.setQTable(qTableOpponent);
-    opponentAgent.reconfigure(0.1, 0.99999, 0, 0, 0);
+    opponentAgent.reconfigure(0.1, 0.95, 0, 0, 0);
 
     const agentGameSymbol = opponentGameSymbol === GameSymbol.X
       ? GameSymbol.O
@@ -113,13 +111,11 @@ async function playAgainstExpertPlayer() {
       agent.setGameSymbol(agentGameSymbol);
       agent.setAgentType(agentModel.agentType);
       agent.setQTable(qTable);
-      agent.reconfigure(0.1, 0.99999, 0, 0, 0);
-
-      agent.printConfig();
+      agent.reconfigure(0.1, 0.95, 0, 0, 0);
 
       let win = 0, loss = 0, draw = 0;
 
-      for (let episode = 1; episode <= numberOfGames; episode++) {
+      for (let gameCount = 1; gameCount <= numberOfGames; gameCount++) {
         const game = new Game();
         game.reset();
 

@@ -24,13 +24,17 @@ export const playGames = (
       game.makeMove(action);
 
       const nextState = game.getState();
-      const reward = getReward(game.getWinner(), currentAgent.getGameSymbol());
-      const nextAvailable = game.getAvailableActions();
+      const nextAvailableActions = game.getAvailableActions();
+      const reward = getReward(
+        game.getWinner(),
+        currentAgent.getGameSymbol(),
+        nextAvailableActions.length
+      );
 
       if (currentAgent.getGameSymbol() === agent.getGameSymbol()
           || isOpponentAgentLearningEnabled
       ) {
-        currentAgent.updateQTable(state, action, reward, nextState, nextAvailable);
+        currentAgent.updateQTable(state, action, reward, nextState, nextAvailableActions);
         currentAgent.decayEpsilon();
       }
 
