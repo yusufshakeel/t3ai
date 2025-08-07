@@ -24,7 +24,7 @@
     "train:all": "npm run train:novice-agent && npm run train:beginner-agent && npm run train:expert-agent",
     "train:novice-agent": "sh scripts/train-novice-agent.sh",
     "train:beginner-agent": "sh scripts/train-beginner-agent.sh",
-    "train:expert-agent": "sh scripts/train-expert-agent.sh"
+    "train:expert-agent": "sh scripts/train-learner-agent.sh"
   },
   "repository": {
     "type": "git",

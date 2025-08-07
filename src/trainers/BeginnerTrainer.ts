@@ -2,14 +2,12 @@ import Agent from '../Agent';
 import Configs from '../configs';
 import { GameSymbol } from '../types/game.type';
 import { playGames } from './common';
+import { AgentType } from '../types/agent.type';
 
 class BeginnerTrainer {
   static train() {
-    const playerX = new Agent(GameSymbol.X);
-    const playerO = new Agent(GameSymbol.O);
-
-    playerX.setIsTraining(true);
-    playerO.setIsTraining(true);
+    const playerX = new Agent(GameSymbol.X, AgentType.BEGINNER);
+    const playerO = new Agent(GameSymbol.O, AgentType.BEGINNER);
 
     console.log('Points', {
       win: Configs.winningPoints,

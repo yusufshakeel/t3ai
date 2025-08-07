@@ -3,7 +3,7 @@
 #############################################
 # Set the env variables
 #############################################
-export T3AI_AGENT_TYPE=expert
+export T3AI_AGENT_TYPE=learner
 read -r -d '' T3AI_TRAINING_PHASES <<'EOF'
 [
   { "name": "explore", "numberOfGames": 300000, "alpha": 0.1, "gamma": 0.95, "epsilon": 1.0, "epsilonDecay": 0.9995, "epsilonMin": 0.2 },

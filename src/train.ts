@@ -4,12 +4,12 @@ import { AgentType } from './types/agent.type';
 import { QTable } from './types/qtable.type';
 import NoviceTrainer from './trainers/NoviceTrainer';
 import BeginnerTrainer from './trainers/BeginnerTrainer';
-import ExpertTrainer from './trainers/ExpertTrainer';
+import LearnerTrainer from './trainers/LearnerTrainer';
 import {
   T3AI_BEGINNER_MODEL_X_FILE_NAME,
   T3AI_BEGINNER_MODEL_O_FILE_NAME,
-  T3AI_EXPERT_MODEL_X_FILE_NAME,
-  T3AI_EXPERT_MODEL_O_FILE_NAME,
+  T3AI_LEARNER_MODEL_X_FILE_NAME,
+  T3AI_LEARNER_MODEL_O_FILE_NAME,
   T3AI_NOVICE_MODEL_X_FILE_NAME,
   T3AI_NOVICE_MODEL_O_FILE_NAME
 } from './constants';
@@ -30,10 +30,10 @@ async function trainAgent() {
     fileNameX = T3AI_BEGINNER_MODEL_X_FILE_NAME;
     fileNameO = T3AI_BEGINNER_MODEL_O_FILE_NAME;
     [qTableX, qTableO] = BeginnerTrainer.train();
-  } else if (Configs.agentType === AgentType.EXPERT) {
-    fileNameX = T3AI_EXPERT_MODEL_X_FILE_NAME;
-    fileNameO = T3AI_EXPERT_MODEL_O_FILE_NAME;
-    [qTableX, qTableO] = ExpertTrainer.train();
+  } else if (Configs.agentType === AgentType.LEARNER) {
+    fileNameX = T3AI_LEARNER_MODEL_X_FILE_NAME;
+    fileNameO = T3AI_LEARNER_MODEL_O_FILE_NAME;
+    [qTableX, qTableO] = LearnerTrainer.train();
   } else {
     throw new Error('Invalid agent type');
   }

@@ -48,12 +48,12 @@ Configurations inside the [train-beginner-agent.sh](scripts/train-beginner-agent
 npm run train:beginner-agent
 ```
 
-### Expert model
+### Learner model
 
-Configurations inside the [train-expert-agent.sh](scripts/train-expert-agent.sh) file.
+Configurations inside the [train-learner-agent.sh](scripts/train-learner-agent.sh) file.
 
 ```shell
-npm run train:expert-agent
+npm run train:learner-agent
 ```
 
 ## Models

@@ -5,12 +5,15 @@ import Game from './Game';
 import { Action, QTable, State } from './types/qtable.type';
 import { GameSymbol, PlayerGameSymbol } from './types/game.type';
 import {
-  T3AI_BEGINNER_MODEL_X_FILE_NAME,
   T3AI_BEGINNER_MODEL_O_FILE_NAME,
-  T3AI_NOVICE_MODEL_X_FILE_NAME,
-  T3AI_NOVICE_MODEL_O_FILE_NAME, T3AI_EXPERT_MODEL_X_FILE_NAME, T3AI_EXPERT_MODEL_O_FILE_NAME
+  T3AI_BEGINNER_MODEL_X_FILE_NAME,
+  T3AI_LEARNER_MODEL_O_FILE_NAME,
+  T3AI_LEARNER_MODEL_X_FILE_NAME,
+  T3AI_NOVICE_MODEL_O_FILE_NAME,
+  T3AI_NOVICE_MODEL_X_FILE_NAME
 } from './constants';
 import { AgentType } from './types/agent.type';
+import { getReward } from './helpers';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -47,9 +50,13 @@ const printWinner = (
 };
 
 async function playGame(game: Game, agent: Agent, userSymbol: PlayerGameSymbol) {
+  const history: { state: State, action: Action }[] = [];
+  let state: State = game.reset();
+
   while (!game.isGameOver()) {
+    const available: Action[] = game.getAvailableActions();
+      
     if (game.getCurrentPlayerGameSymbol() === userSymbol) {
-      const available: Action[] = game.getAvailableActions();
       let move: Action;
       let validMove = false;
       while (!validMove) {
@@ -57,20 +64,61 @@ async function playGame(game: Game, agent: Agent, userSymbol: PlayerGameSymbol) 
         move = parseInt(input, 10) as Action;
         if (available.includes(move)) {
           validMove = true;
+          game.makeMove(move);
         } else {
           console.log('Invalid move. Try again.');
+          renderBoard(state);
         }
       }
-      game.makeMove(move!);
     } else {
-      const state = game.getState();
-      const available = game.getAvailableActions();
       const move = agent.chooseAction(state, available);
       console.log(`AI plays: ${move}`);
       game.makeMove(move);
     }
 
+    const nextState = game.getState();
+    const nextAvailableActions = game.getAvailableActions();
+    const reward = getReward(game.getWinner(), agent.getGameSymbol(), nextAvailableActions.length);
+
+    if (game.getCurrentPlayerGameSymbol() === agent.getGameSymbol()) {
+      const action = game.getBoard()
+        .findIndex((cell, index) => {
+          return cell === agent.getGameSymbol() && state[index] === '-';
+        }) as Action;
+      if (action >= 0) {
+        history.push({ state, action });
+      }
+    } else {
+      const lastMove = history[history.length - 1];
+      if (lastMove) {
+        agent.updateQTable(
+          lastMove.state,
+          lastMove.action,
+          reward,
+          nextState,
+          nextAvailableActions
+        );
+      }
+    }
+
+    state = nextState;
     renderBoard(game.getState());
+  }
+
+  const lastMove = history[history.length - 1];
+  if (lastMove) {
+    const reward = getReward(
+      game.getWinner(),
+      agent.getGameSymbol(),
+      game.getAvailableActions().length
+    );
+    agent.updateQTable(
+      lastMove.state,
+      lastMove.action,
+      reward,
+      state,
+      []
+    );
   }
 }
 
@@ -81,12 +129,12 @@ async function main() {
   const models = {
     1: [T3AI_NOVICE_MODEL_X_FILE_NAME, T3AI_NOVICE_MODEL_O_FILE_NAME],
     2: [T3AI_BEGINNER_MODEL_X_FILE_NAME, T3AI_BEGINNER_MODEL_O_FILE_NAME],
-    3: [T3AI_EXPERT_MODEL_X_FILE_NAME, T3AI_EXPERT_MODEL_O_FILE_NAME]
+    3: [T3AI_LEARNER_MODEL_X_FILE_NAME, T3AI_LEARNER_MODEL_O_FILE_NAME]
   };
   const agentTypes = {
     1: AgentType.NOVICE,
     2: AgentType.BEGINNER,
-    3: AgentType.EXPERT
+    3: AgentType.LEARNER
   };
 
   const userSymbol = (await ask('Do you want to be X or O? ')).toUpperCase();
@@ -95,7 +143,12 @@ async function main() {
   }
   const aiSymbol = userSymbol === GameSymbol.X ? GameSymbol.O : GameSymbol.X;
 
-  console.log('Choose your AI opponent\n1. Novice\n2. Beginner\n3. Expert');
+  console.log(
+    'Choose your AI opponent\n' +
+      '1. Novice\n' +
+      '2. Beginner\n' +
+      '3. Learner\n'
+  );
   const aiType = (await ask('Select [1,2,3]: '));
 
   let modelPath: string = '';
@@ -107,13 +160,12 @@ async function main() {
 
   const agent = new Agent(
     aiSymbol,
+    agentTypes[aiType] as AgentType,
+    0.01,
+    0.9,
     0,
     0,
-    0,
-    0,
-    0,
-    false,
-    agentTypes[aiType]
+    0
   );
   const qTable: QTable = JSON.parse(await fs.readFile(modelPath, 'utf-8'));
   agent.setQTable(qTable);
@@ -124,6 +176,10 @@ async function main() {
   await playGame(game, agent, userSymbol as PlayerGameSymbol);
 
   printWinner(game, userSymbol, aiSymbol);
+
+  if (agentTypes[aiType] === AgentType.LEARNER) {
+    await fs.writeFile(modelPath, JSON.stringify(agent.getQTable()));
+  }
 }
 
 main()

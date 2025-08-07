@@ -1,8 +1,7 @@
 import Configs from './configs';
-import { getBoardFromState, getRandomIndex } from './helpers';
-import { GameSymbol, PlayerGameSymbol } from './types/game.type';
+import { getRandomIndex } from './helpers';
+import { PlayerGameSymbol } from './types/game.type';
 import { Action, QTable, QValue, State } from './types/qtable.type';
-import Game from './Game';
 import { AgentType } from './types/agent.type';
 
 class Agent {
@@ -13,43 +12,31 @@ class Agent {
   private epsilon: number;
   private epsilonDecay: number;
   private epsilonMin: number;
-  private gameInstanceForAgent: Game;
-  private gameInstanceForOpponent: Game;
-  private isTraining: boolean;
   private agentType: AgentType;
 
   constructor(
     gameSymbol: PlayerGameSymbol,
+    agentType: AgentType,
     alpha = Configs.learningRateAlpha,
     gamma = Configs.discountFactorGamma,
     epsilon = Configs.explorationChanceEpsilon,
     epsilonDecay = Configs.explorationChanceEpsilonDecay,
-    epsilonMin = Configs.explorationChanceEpsilonMin,
-    isTraining = false,
-    agentType = AgentType.NOVICE
+    epsilonMin = Configs.explorationChanceEpsilonMin
   ) {
     this.gameSymbol = gameSymbol;
+    this.agentType = agentType;
     this.qTable = {};
     this.alpha = alpha;
     this.gamma = gamma;
     this.epsilon = epsilon;
     this.epsilonDecay = epsilonDecay;
     this.epsilonMin = epsilonMin;
-
-    this.isTraining = isTraining;
-    this.agentType = agentType;
-
-    this.gameInstanceForAgent = new Game();
-    this.gameInstanceForOpponent = new Game();
   }
 
   printConfig(): void {
-    console.log('Agent configuration:');
-    console.log('==============================');
-    console.log({
+    console.log('Agent configuration:', {
       agentType: this.agentType,
       gameSymbol: this.gameSymbol,
-      isTraining: this.isTraining,
       alpha: this.alpha,
       gamma: this.gamma,
       epsilon: this.epsilon,
@@ -80,10 +67,6 @@ class Agent {
     this.agentType = agentType;
   }
 
-  setIsTraining(isTraining: boolean): void {
-    this.isTraining = isTraining;
-  }
-
   setQTable(qTable: QTable): void {
     this.qTable = qTable;
   }
@@ -108,47 +91,8 @@ class Agent {
     return this.qTable[state];
   }
 
-  immediateNextActionToPreventOpponentFromWinning(
-    state: State,
-    availableActions: Action[],
-    opponentPlayerGameSymbol: PlayerGameSymbol
-  ): Action | null {
-    for (const action of availableActions) {
-      this.gameInstanceForAgent.reset();
-      this.gameInstanceForAgent.setCurrentPlayerGameSymbol(this.gameSymbol);
-      this.gameInstanceForAgent.setBoard(getBoardFromState(state));
-      this.gameInstanceForAgent.makeMove(action);
-
-      const nextAvailableActionsForOpponent = this.gameInstanceForAgent.getAvailableActions();
-      for (const nextActionForOpponent of nextAvailableActionsForOpponent) {
-        this.gameInstanceForOpponent.reset();
-        this.gameInstanceForOpponent.setCurrentPlayerGameSymbol(opponentPlayerGameSymbol);
-        this.gameInstanceForOpponent.setBoard([...this.gameInstanceForAgent.getBoard()]);
-        this.gameInstanceForOpponent.makeMove(nextActionForOpponent);
-        if (this.gameInstanceForOpponent.isPlayerWinning(opponentPlayerGameSymbol)) {
-          return nextActionForOpponent;
-        }
-      }
-    }
-    return null;
-  }
-
   chooseAction(state: State, availableActions: Action[]): Action {
     const qValues = this.getQValues(state, availableActions);
-
-    if (!this.isTraining && ![AgentType.NOVICE, AgentType.BEGINNER].includes(this.agentType)) {
-      const opponentPlayerGameSymbol = this.gameSymbol === GameSymbol.X
-        ? GameSymbol.O
-        : GameSymbol.X;
-      const immediateNextAction = this.immediateNextActionToPreventOpponentFromWinning(
-        state,
-        availableActions,
-        opponentPlayerGameSymbol
-      );
-      if (immediateNextAction !== null) {
-        return immediateNextAction;
-      }
-    }
 
     if (Math.random() < this.epsilon) {
       const randomIndex = getRandomIndex(availableActions);
