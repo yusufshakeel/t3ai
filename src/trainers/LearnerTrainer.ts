@@ -2,8 +2,9 @@ import Agent from '../Agent';
 import Configs from '../configs';
 import { GameSymbol } from '../types/game.type';
 import { playGames } from './common';
+import { AgentType } from '../types/agent.type';
 
-class ExpertTrainer {
+class LearnerTrainer {
   static train() {
     console.log('Points', {
       win: Configs.winningPoints,
@@ -15,11 +16,8 @@ class ExpertTrainer {
     const phases = Configs.trainingPhases;
 
     console.log('Training mentors...');
-    const mentorX = new Agent(GameSymbol.X);
-    const mentorO = new Agent(GameSymbol.O);
-
-    mentorX.setIsTraining(true);
-    mentorO.setIsTraining(true);
+    const mentorX = new Agent(GameSymbol.X, AgentType.LEARNER);
+    const mentorO = new Agent(GameSymbol.O, AgentType.LEARNER);
 
     phases.forEach(phase => {
       console.log('Training phase', phase);
@@ -45,18 +43,16 @@ class ExpertTrainer {
         phase.numberOfGames,
         mentorX,
         mentorO,
-        `[Expert Mentor - ${phase.name}]`
+        `[Learner Mentor - ${phase.name}]`
       );
     });
 
-    console.log('Training expert E1x...');
-    const expertX = new Agent(GameSymbol.X);
-
-    expertX.setIsTraining(true);
+    console.log('Training learner L1x...');
+    const learnerX = new Agent(GameSymbol.X, AgentType.LEARNER);
 
     phases.forEach(phase => {
       console.log('Training phase', phase);
-      expertX.reconfigure(
+      learnerX.reconfigure(
         phase.alpha,
         phase.gamma,
         phase.epsilon,
@@ -71,26 +67,24 @@ class ExpertTrainer {
         0
       );
 
-      expertX.printConfig();
+      learnerX.printConfig();
       mentorO.printConfig();
 
       playGames(
         phase.numberOfGames,
-        expertX,
+        learnerX,
         mentorO,
-        `[Expert E1x vs MentorO - ${phase.name}]`,
+        `[Learner L1x vs MentorO - ${phase.name}]`,
         false
       );
     });
 
-    console.log('Training expert E2o...');
-    const expertO = new Agent(GameSymbol.O);
-
-    expertO.setIsTraining(true);
+    console.log('Training learner L2o...');
+    const learnerO = new Agent(GameSymbol.O, AgentType.LEARNER);
 
     phases.forEach(phase => {
       console.log('Training phase', phase);
-      expertO.reconfigure(
+      learnerO.reconfigure(
         phase.alpha,
         phase.gamma,
         phase.epsilon,
@@ -105,20 +99,20 @@ class ExpertTrainer {
         0
       );
 
-      expertO.printConfig();
+      learnerO.printConfig();
       mentorX.printConfig();
 
       playGames(
         phase.numberOfGames,
-        expertO,
+        learnerO,
         mentorX,
-        `[Expert E2o vs MentorX - ${phase.name}]`,
+        `[Learner L2o vs MentorX - ${phase.name}]`,
         false
       );
     });
 
-    return [expertX.getQTable(), expertO.getQTable()];
+    return [learnerX.getQTable(), learnerO.getQTable()];
   }
 }
 
-export default ExpertTrainer;
+export default LearnerTrainer;

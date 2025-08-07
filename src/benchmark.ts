@@ -4,7 +4,7 @@ import Agent from './Agent';
 import { GameSymbol } from './types/game.type';
 import Game from './Game';
 import { getRandomIndex } from './helpers';
-import { oModels, T3AI_EXPERT_MODEL_O_FILE_NAME, T3AI_EXPERT_MODEL_X_FILE_NAME, xModels } from './constants';
+import { oModels, T3AI_LEARNER_MODEL_O_FILE_NAME, T3AI_LEARNER_MODEL_X_FILE_NAME, xModels } from './constants';
 import { AgentType } from './types/agent.type';
 
 const modelsDir = process.cwd() + '/models';
@@ -12,7 +12,7 @@ const numberOfGames = 1000;
 const report: any[] = [];
 
 async function playAgainstRandomPlayer() {
-  const agent = new Agent(GameSymbol.O);
+  const agent = new Agent(GameSymbol.O, AgentType.NOVICE);
 
   const opponentGameSymbols = [GameSymbol.X, GameSymbol.O];
 
@@ -76,14 +76,14 @@ async function playAgainstRandomPlayer() {
   }
 }
 
-async function playAgainstExpertPlayer() {
-  const agent = new Agent(GameSymbol.O);
-  const opponentAgent = new Agent(GameSymbol.X);
+async function playAgainstLearnerPlayer() {
+  const agent = new Agent(GameSymbol.O, AgentType.NOVICE);
+  const opponentAgent = new Agent(GameSymbol.X, AgentType.NOVICE);
 
   const opponentGameSymbols = [GameSymbol.X, GameSymbol.O];
   const opponentAgentModels = {
-    [GameSymbol.X]: { filename: T3AI_EXPERT_MODEL_X_FILE_NAME, agentType: AgentType.EXPERT },
-    [GameSymbol.O]: { filename: T3AI_EXPERT_MODEL_O_FILE_NAME, agentType: AgentType.EXPERT }
+    [GameSymbol.X]: { filename: T3AI_LEARNER_MODEL_X_FILE_NAME, agentType: AgentType.LEARNER },
+    [GameSymbol.O]: { filename: T3AI_LEARNER_MODEL_O_FILE_NAME, agentType: AgentType.LEARNER }
   };
 
   for (const opponentGameSymbol of opponentGameSymbols) {
@@ -140,7 +140,7 @@ async function playAgainstExpertPlayer() {
 
       report.push({
         model: agentModel.filename,
-        against: 'expert player',
+        against: 'learner player',
         wins: win,
         losses: loss,
         draws: draw,
@@ -154,7 +154,7 @@ async function playAgainstExpertPlayer() {
 
 async function main() {
   await playAgainstRandomPlayer();
-  await playAgainstExpertPlayer();
+  await playAgainstLearnerPlayer();
   console.table(report);
 }
 
