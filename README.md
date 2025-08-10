@@ -69,12 +69,20 @@ Run the following command to benchmark the models.
 npm run benchmark
 ```
 
-## Play
+## Play CLI
 
-You can play with the AI agent by running the following command.
+You can play with the AI agent in the console by running the following command.
 
 ```shell
 npm run play
+```
+
+## Play GUI
+
+You can play with the AI agent in the browser by running the following command.
+
+```shell
+npm run start
 ```
 
 ## License

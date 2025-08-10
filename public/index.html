@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tic Tac Toe</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f0f0f0;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .choose-symbol {
+            text-align: center;
+        }
+
+        .choose-symbol button,
+        #gameStatusConstainer button {
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .board {
+            display: none;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            border: 2px solid #444;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .cell:hover {
+            background: #eee;
+        }
+
+        footer {
+            background: #e5e5e5;
+            padding: 1rem;
+            text-align: center;
+            min-height: 80px;
+        }
+
+        #score {
+            margin: 10px 0 30px;
+            font-size: 1.2rem;
+        }
+
+        #gameStatusConstainer {
+            display: none;
+        }
+
+        #gameStatus {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Tic Tac Toe</h1>
+</header>
+
+<main>
+    <div class="choose-symbol" id="symbolChooser">
+        <p>Please choose your symbol:</p>
+        <button onclick="startGame('X')">Play as X</button>
+        <button onclick="startGame('O')">Play as O</button>
+    </div>
+
+    <div class="board" id="gameBoard">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+
+        <div id="error"></div>
+    </div>
+
+    <div id="gameStatusConstainer">
+        <h3 id="gameStatus"></h3>
+        <button onclick="playAgain()">Play Again</button>
+    </div>
+
+    <div id="status"></div>
+</main>
+
+<footer>
+    <div id="score">
+        You: <span id="userScore"></span>
+        &nbsp;&nbsp;&nbsp;
+        <span id="aiScore"></span> :AI
+    </div>
+    <p>MIT License &copy; 2025 Yusuf Shakeel</p>
+    <p><a href="https://github.com/yusufshakeel/t3ai">GitHub</a></p>
+</footer>
+
+<script>
+    let userSymbol = '';
+    const symbolChooser = document.getElementById('symbolChooser');
+    const gameBoard = document.getElementById('gameBoard');
+    const gameStatusConstainer = document.getElementById('gameStatusConstainer');
+    const gameStatus = document.getElementById('gameStatus');
+    const status = document.getElementById('status');
+    const error = document.getElementById('error');
+    const userScore = document.getElementById('userScore');
+    const aiScore = document.getElementById('aiScore');
+    let isUserClickLocked = true;
+
+    function playAgain() {
+        symbolChooser.style.display = 'block';
+        gameStatusConstainer.style.display = 'none';
+        gameBoard.style.display = 'none';
+    }
+
+    function renderBoard(board) {
+        const cells = gameBoard.querySelectorAll('.cell');
+        cells.forEach((cell, index) => {
+            cell.textContent = board[index] ?? '';
+        });
+    }
+
+    function handleBoardCellClick(e) {
+        if (isUserClickLocked) {
+            return;
+        }
+
+        const cell = e.target;
+        if (cell.textContent !== '') {
+            return;
+        }
+
+        isUserClickLocked = true;
+
+        fetch('/api/move?userSymbol=' + userSymbol + '&move=' + cell.dataset.index)
+            .then(res => res.json())
+            .then(data => {
+                error.textContent = '';
+                renderBoard(data.board);
+
+                if (data.isGameOver) {
+                    userScore.textContent = data.userScore;
+                    aiScore.textContent = data.aiScore;
+                    gameStatusConstainer.style.display = 'block';
+                    gameStatus.textContent = data.gameStatus
+                    status.textContent = '';
+                } else {
+                    isUserClickLocked = data.currentPlayerGameSymbol !== userSymbol;
+                }
+            })
+            .catch(err => {
+                isUserClickLocked = false;
+                console.error('Error fetching:', err);
+                error.textContent = 'Some error occurred. Please try again or refresh the page.';
+            });
+    }
+
+    function startGame(symbol) {
+        userSymbol = symbol;
+
+        fetch('/api/start?userSymbol=' + userSymbol)
+            .then(res => res.json())
+            .then(data => {
+                error.textContent = '';
+                symbolChooser.style.display = 'none';
+                gameBoard.style.display = 'grid';
+                userScore.textContent = data.userScore;
+                aiScore.textContent = data.aiScore;
+                status.textContent = `You are playing with ${data.userSymbol}.`;
+                renderBoard(data.board);
+                isUserClickLocked = data.currentPlayerGameSymbol !== userSymbol;
+            })
+            .catch(err => {
+                console.error('Error fetching:', err);
+                error.textContent = 'Some error occurred. Please try again or refresh the page.';
+            });
+    }
+
+    gameBoard.addEventListener('click', handleBoardCellClick);
+</script>
+
+</body>
+</html>

@@ -178,7 +178,9 @@ async function main() {
   printWinner(game, userSymbol, aiSymbol);
 
   if (agentTypes[aiType] === AgentType.LEARNER) {
+    console.log('🤖 Learning from your moves...');
     await fs.writeFile(modelPath, JSON.stringify(agent.getQTable()));
+    console.log('🤖 One more round.');
   }
 }
 

@@ -9,6 +9,7 @@
     "dist"
   ],
   "scripts": {
+    "start": "ts-node src/server.ts",
     "play": "ts-node src/index.ts",
     "benchmark": "ts-node src/benchmark.ts",
     "bootstrap": "mkdir -p models",
