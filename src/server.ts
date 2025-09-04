@@ -82,37 +82,26 @@ const updateQTable = (state: State, isGameOver: boolean) => {
       nextAvailableActions.length
     );
 
-    if (game.getCurrentPlayerGameSymbol() === agent.getGameSymbol()) {
-      const action = game.getBoard()
-        .findIndex((cell, index) => {
-          return cell === agent.getGameSymbol() && state[index] === '-';
-        }) as Action;
-      if (action >= 0) {
-        history.push({ state, action });
-      }
-    } else {
+    if (history.length) {
       const lastMove = history[history.length - 1];
-      if (lastMove) {
-        agent.updateQTable(
-          lastMove.state,
-          lastMove.action,
-          reward,
-          nextState,
-          nextAvailableActions
-        );
-      }
-    }
-  } else {
-    const lastMove = history[history.length - 1];
-    if (lastMove) {
-      const reward = getReward(
-        game.getWinner(),
-        agent.getGameSymbol(),
-        game.getAvailableActions().length
-      );
       agent.updateQTable(
         lastMove.state,
         lastMove.action,
+        reward,
+        nextState,
+        nextAvailableActions
+      );
+    }
+  } else {
+    const reward = getReward(
+      game.getWinner(),
+      agent.getGameSymbol(),
+      game.getAvailableActions().length
+    );
+    for (const move of history) {
+      agent.updateQTable(
+        move.state,
+        move.action,
         reward,
         state,
         []
@@ -127,6 +116,7 @@ const aiTurn = () => {
     const available = game.getAvailableActions();
     const action = agent.chooseAction(state, available);
     game.makeMove(action);
+    history.push({ state, action });
     updateQTable(state, false);
   }
 };
