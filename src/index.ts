@@ -78,7 +78,12 @@ async function playGame(game: Game, agent: Agent, userSymbol: PlayerGameSymbol) 
 
     const nextState = game.getState();
     const nextAvailableActions = game.getAvailableActions();
-    const reward = getReward(game.getWinner(), agent.getGameSymbol(), nextAvailableActions.length);
+    const reward = getReward(
+      game.getWinner(),
+      agent.getGameSymbol(),
+      nextAvailableActions.length,
+      game.isGameOver()
+    );
 
     if (game.getCurrentPlayerGameSymbol() === agent.getGameSymbol()) {
       const action = game.getBoard()
@@ -110,7 +115,8 @@ async function playGame(game: Game, agent: Agent, userSymbol: PlayerGameSymbol) 
     const reward = getReward(
       game.getWinner(),
       agent.getGameSymbol(),
-      game.getAvailableActions().length
+      game.getAvailableActions().length,
+      game.isGameOver()
     );
     agent.updateQTable(
       lastMove.state,

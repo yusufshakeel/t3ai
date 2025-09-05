@@ -26,15 +26,15 @@ class Configs {
   }
 
   public get winningPoints(): number {
-    return parseFloat(process.env.T3AI_WINNING_POINTS || '1');
+    return parseFloat(process.env.T3AI_WINNING_POINTS || '3');
   }
 
   public get losingPoints(): number {
-    return parseFloat(process.env.T3AI_LOSING_POINTS || '-10');
+    return parseFloat(process.env.T3AI_LOSING_POINTS || '-5');
   }
 
   public get drawPoints(): number {
-    return parseFloat(process.env.T3AI_DRAW_POINTS || '0.5');
+    return parseFloat(process.env.T3AI_DRAW_POINTS || '2');
   }
 
   public get gameNotOverYetPoints(): number {

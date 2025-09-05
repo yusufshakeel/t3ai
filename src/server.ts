@@ -79,11 +79,13 @@ const updateQTable = (state: State, isGameOver: boolean) => {
     const reward = getReward(
       game.getWinner(),
       agent.getGameSymbol(),
-      nextAvailableActions.length
+      nextAvailableActions.length,
+      game.isGameOver()
     );
 
     if (history.length) {
       const lastMove = history[history.length - 1];
+      logger(`Update Q Table: isGameOver: ${isGameOver} lastState: ${lastMove.state} lastAction: ${lastMove.action} nextState: ${nextState} nextAvailableActions: ${nextAvailableActions} reward: ${reward}`);
       agent.updateQTable(
         lastMove.state,
         lastMove.action,
@@ -96,9 +98,11 @@ const updateQTable = (state: State, isGameOver: boolean) => {
     const reward = getReward(
       game.getWinner(),
       agent.getGameSymbol(),
-      game.getAvailableActions().length
+      game.getAvailableActions().length,
+      game.isGameOver()
     );
     for (const move of history) {
+      logger(`Update Q Table: isGameOver: ${isGameOver} state: ${move.state} action: ${move.action} reward: ${reward}`);
       agent.updateQTable(
         move.state,
         move.action,
@@ -115,6 +119,7 @@ const aiTurn = () => {
     const state = game.getState();
     const available = game.getAvailableActions();
     const action = agent.chooseAction(state, available);
+    logger(`AI action: ${action} state: ${state} available: ${available}`);
     game.makeMove(action);
     history.push({ state, action });
     updateQTable(state, false);
@@ -128,6 +133,7 @@ const userTurn = (action: Action) => {
     if (!available.includes(action)) {
       return { error: 'Invalid move. Try again.' };
     }
+    logger(`User action: ${action} state: ${state} available: ${available}`);
     game.makeMove(action);
     updateQTable(state, false);
     aiTurn();
