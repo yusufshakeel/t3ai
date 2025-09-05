@@ -74,47 +74,43 @@ async function playGame(game: Game, agent: Agent, userSymbol: PlayerGameSymbol) 
       const move = agent.chooseAction(state, available);
       console.log(`AI plays: ${move}`);
       game.makeMove(move);
+      history.push({ state, action: move });
     }
 
     const nextState = game.getState();
     const nextAvailableActions = game.getAvailableActions();
-    const reward = getReward(game.getWinner(), agent.getGameSymbol(), nextAvailableActions.length);
+    const reward = getReward(
+      game.getWinner(),
+      agent.getGameSymbol(),
+      nextAvailableActions.length,
+      game.isGameOver()
+    );
 
-    if (game.getCurrentPlayerGameSymbol() === agent.getGameSymbol()) {
-      const action = game.getBoard()
-        .findIndex((cell, index) => {
-          return cell === agent.getGameSymbol() && state[index] === '-';
-        }) as Action;
-      if (action >= 0) {
-        history.push({ state, action });
-      }
-    } else {
+    if (history.length) {
       const lastMove = history[history.length - 1];
-      if (lastMove) {
-        agent.updateQTable(
-          lastMove.state,
-          lastMove.action,
-          reward,
-          nextState,
-          nextAvailableActions
-        );
-      }
+      agent.updateQTable(
+        lastMove.state,
+        lastMove.action,
+        reward,
+        nextState,
+        nextAvailableActions
+      );
     }
 
     state = nextState;
     renderBoard(game.getState());
   }
 
-  const lastMove = history[history.length - 1];
-  if (lastMove) {
-    const reward = getReward(
-      game.getWinner(),
-      agent.getGameSymbol(),
-      game.getAvailableActions().length
-    );
+  const reward = getReward(
+    game.getWinner(),
+    agent.getGameSymbol(),
+    game.getAvailableActions().length,
+    game.isGameOver()
+  );
+  for (const move of history) {
     agent.updateQTable(
-      lastMove.state,
-      lastMove.action,
+      move.state,
+      move.action,
       reward,
       state,
       []

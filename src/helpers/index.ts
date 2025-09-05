@@ -7,13 +7,14 @@ export const getRandomIndex = (arr: any[]) => Math.floor(Math.random() * arr.len
 export const getReward = (
   winner: Winner,
   player: PlayerGameSymbol,
-  numberOfPossibleActions: number
+  numberOfPossibleActions: number,
+  isGameOver: boolean
 ) => {
+  if (!isGameOver) {
+    return Configs.gameNotOverYetPoints;
+  }
   if (winner === null) {
     return Configs.drawPoints;
-  }
-  if (winner === undefined) {
-    return Configs.gameNotOverYetPoints;
   }
   return winner === player
     ? Configs.winningPoints

@@ -28,7 +28,8 @@ export const playGames = (
       const reward = getReward(
         game.getWinner(),
         currentAgent.getGameSymbol(),
-        nextAvailableActions.length
+        nextAvailableActions.length,
+        game.isGameOver()
       );
 
       if (currentAgent.getGameSymbol() === agent.getGameSymbol()
