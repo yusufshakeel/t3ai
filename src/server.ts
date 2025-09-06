@@ -205,7 +205,7 @@ const apiUserMoveHandler = (res: any, queryParams: URLSearchParams) => {
   if (game.isGameOver()) {
     updateQTable(state, true);
     logger(`Updating Q-Table: ${modelFilePath}`);
-    fs.writeFileSync(modelFilePath, JSON.stringify(agent.getQTable()));
+    fs.writeFileSync(modelFilePath, JSON.stringify(agent.getQTable(), null, 2));
   }
 
   res.end(gameResponse());
