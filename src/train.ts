@@ -41,8 +41,8 @@ async function trainAgent() {
   const filePathX = process.cwd() + '/models/' + fileNameX;
   const filePathO = process.cwd() + '/models/' + fileNameO;
 
-  await fs.writeFile(filePathX, JSON.stringify(qTableX));
-  await fs.writeFile(filePathO, JSON.stringify(qTableO));
+  await fs.writeFile(filePathX, JSON.stringify(qTableX, null, 2));
+  await fs.writeFile(filePathO, JSON.stringify(qTableO, null, 2));
 
   console.log(`File saved: ${filePathX}`);
   console.log(`File saved: ${filePathO}`);

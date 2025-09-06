@@ -175,7 +175,7 @@ async function main() {
 
   if (agentTypes[aiType] === AgentType.LEARNER) {
     console.log('🤖 Learning from your moves...');
-    await fs.writeFile(modelPath, JSON.stringify(agent.getQTable()));
+    await fs.writeFile(modelPath, JSON.stringify(agent.getQTable(), null, 2));
     console.log('🤖 One more round.');
   }
 }
