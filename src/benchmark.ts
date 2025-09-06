@@ -4,12 +4,32 @@ import Agent from './Agent';
 import { GameSymbol } from './types/game.type';
 import Game from './Game';
 import { getRandomIndex } from './helpers';
-import { oModels, T3AI_LEARNER_MODEL_O_FILE_NAME, T3AI_LEARNER_MODEL_X_FILE_NAME, xModels } from './constants';
+import {
+  T3AI_LEARNER_MODEL_FILE_NAME,
+  T3AI_LEARNER_MODEL_O_FILE_NAME,
+  T3AI_LEARNER_MODEL_X_FILE_NAME,
+  models,
+  oModels,
+  xModels
+} from './constants';
 import { AgentType } from './types/agent.type';
+import Configs from './configs';
 
 const modelsDir = process.cwd() + '/models';
 const numberOfGames = 1000;
 const report: any[] = [];
+
+const getAgentModels = (agentGameSymbol: GameSymbol): {
+    filename: string
+    agentType: AgentType
+}[] => {
+  if (Configs.generateSingleModel) {
+    return models;
+  }
+  return agentGameSymbol === GameSymbol.X
+    ? xModels
+    : oModels;
+};
 
 async function playAgainstRandomPlayer() {
   const agent = new Agent(GameSymbol.O, AgentType.NOVICE);
@@ -21,9 +41,7 @@ async function playAgainstRandomPlayer() {
       ? GameSymbol.O
       : GameSymbol.X;
 
-    const agentModels = agentGameSymbol === GameSymbol.X
-      ? xModels
-      : oModels;
+    const agentModels = getAgentModels(agentGameSymbol);
 
     for (const agentModel of agentModels) {
       const filePath = modelsDir + '/' + agentModel.filename;
@@ -81,10 +99,15 @@ async function playAgainstLearnerPlayer() {
   const opponentAgent = new Agent(GameSymbol.X, AgentType.NOVICE);
 
   const opponentGameSymbols = [GameSymbol.X, GameSymbol.O];
-  const opponentAgentModels = {
-    [GameSymbol.X]: { filename: T3AI_LEARNER_MODEL_X_FILE_NAME, agentType: AgentType.LEARNER },
-    [GameSymbol.O]: { filename: T3AI_LEARNER_MODEL_O_FILE_NAME, agentType: AgentType.LEARNER }
-  };
+  const opponentAgentModels = Configs.generateSingleModel
+    ? {
+      [GameSymbol.X]: { filename: T3AI_LEARNER_MODEL_FILE_NAME, agentType: AgentType.LEARNER },
+      [GameSymbol.O]: { filename: T3AI_LEARNER_MODEL_FILE_NAME, agentType: AgentType.LEARNER }
+    }
+    : {
+      [GameSymbol.X]: { filename: T3AI_LEARNER_MODEL_X_FILE_NAME, agentType: AgentType.LEARNER },
+      [GameSymbol.O]: { filename: T3AI_LEARNER_MODEL_O_FILE_NAME, agentType: AgentType.LEARNER }
+    };
 
   for (const opponentGameSymbol of opponentGameSymbols) {
     const opponentAgentModel = opponentAgentModels[opponentGameSymbol];
@@ -100,9 +123,7 @@ async function playAgainstLearnerPlayer() {
       ? GameSymbol.O
       : GameSymbol.X;
 
-    const agentModels = agentGameSymbol === GameSymbol.X
-      ? xModels
-      : oModels;
+    const agentModels = getAgentModels(agentGameSymbol);
 
     for (const agentModel of agentModels) {
       const filePath = modelsDir + '/' + agentModel.filename;

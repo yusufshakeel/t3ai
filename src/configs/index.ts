@@ -48,6 +48,10 @@ class Configs {
   public get trainingPhases(): TrainingPhase[] {
     return JSON.parse(process.env.T3AI_TRAINING_PHASES || '{}');
   }
+
+  public get generateSingleModel(): boolean {
+    return process.env.T3AI_GENERATE_SINGLE_MODEL === 'yes';
+  }
 }
 
 export default new Configs();

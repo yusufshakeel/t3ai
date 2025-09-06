@@ -2,6 +2,8 @@ import Game from '../Game';
 import { State } from '../types/qtable.type';
 import { getReward } from '../helpers';
 import Agent from '../Agent';
+import Configs from '../configs';
+import { GameSymbol } from '../types/game.type';
 
 export const playGames = (
   numberOfGames: number,
@@ -11,6 +13,13 @@ export const playGames = (
   isOpponentAgentLearningEnabled = true
 ): void => {
   for (let gameCount = 1; gameCount <= numberOfGames; gameCount++) {
+    if (Configs.generateSingleModel) {
+      const agentSymbol = Math.random() < 0.5 ? GameSymbol.X : GameSymbol.O;
+      const opponentAgentSymbol = agentSymbol === GameSymbol.X ? GameSymbol.O : GameSymbol.X;
+      agent.setGameSymbol(agentSymbol);
+      opponentAgent.setGameSymbol(opponentAgentSymbol);
+    }
+
     const game = new Game();
     let state: State = game.reset();
 

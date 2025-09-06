@@ -6,6 +6,7 @@ import { GameSymbol } from './types/game.type';
 import Agent from './Agent';
 import { AgentType } from './types/agent.type';
 import {
+  T3AI_LEARNER_MODEL_FILE_NAME,
   T3AI_LEARNER_MODEL_O_FILE_NAME,
   T3AI_LEARNER_MODEL_X_FILE_NAME
 } from './constants';
@@ -13,15 +14,21 @@ import fs from 'fs';
 import { Action, QTable, State } from './types/qtable.type';
 import Game from './Game';
 import { getBoardFromState, getReward } from './helpers';
+import Configs from './configs';
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = join(process.cwd(), 'public');
 
 const modelsDir = process.cwd() + '/models';
-const models = {
-  [GameSymbol.X]: T3AI_LEARNER_MODEL_X_FILE_NAME,
-  [GameSymbol.O]: T3AI_LEARNER_MODEL_O_FILE_NAME
-};
+const models = Configs.generateSingleModel
+  ? {
+    [GameSymbol.X]: T3AI_LEARNER_MODEL_FILE_NAME,
+    [GameSymbol.O]: T3AI_LEARNER_MODEL_FILE_NAME
+  }
+  :{
+    [GameSymbol.X]: T3AI_LEARNER_MODEL_X_FILE_NAME,
+    [GameSymbol.O]: T3AI_LEARNER_MODEL_O_FILE_NAME
+  };
 let modelFilePath = '';
 
 const agent = new Agent(

@@ -6,6 +6,9 @@ import NoviceTrainer from './trainers/NoviceTrainer';
 import BeginnerTrainer from './trainers/BeginnerTrainer';
 import LearnerTrainer from './trainers/LearnerTrainer';
 import {
+  T3AI_NOVICE_MODEL_FILE_NAME,
+  T3AI_BEGINNER_MODEL_FILE_NAME,
+  T3AI_LEARNER_MODEL_FILE_NAME,
   T3AI_BEGINNER_MODEL_X_FILE_NAME,
   T3AI_BEGINNER_MODEL_O_FILE_NAME,
   T3AI_LEARNER_MODEL_X_FILE_NAME,
@@ -21,31 +24,40 @@ async function trainAgent() {
   let qTableO: QTable = {};
   let fileNameX: string;
   let fileNameO: string;
+  let fileName: string;
 
   if (Configs.agentType === AgentType.NOVICE) {
     fileNameX = T3AI_NOVICE_MODEL_X_FILE_NAME;
     fileNameO = T3AI_NOVICE_MODEL_O_FILE_NAME;
+    fileName = T3AI_NOVICE_MODEL_FILE_NAME;
     [qTableX, qTableO] = NoviceTrainer.train();
   } else if (Configs.agentType === AgentType.BEGINNER) {
     fileNameX = T3AI_BEGINNER_MODEL_X_FILE_NAME;
     fileNameO = T3AI_BEGINNER_MODEL_O_FILE_NAME;
+    fileName = T3AI_BEGINNER_MODEL_FILE_NAME;
     [qTableX, qTableO] = BeginnerTrainer.train();
   } else if (Configs.agentType === AgentType.LEARNER) {
     fileNameX = T3AI_LEARNER_MODEL_X_FILE_NAME;
     fileNameO = T3AI_LEARNER_MODEL_O_FILE_NAME;
+    fileName = T3AI_LEARNER_MODEL_FILE_NAME;
     [qTableX, qTableO] = LearnerTrainer.train();
   } else {
     throw new Error('Invalid agent type');
   }
 
-  const filePathX = process.cwd() + '/models/' + fileNameX;
-  const filePathO = process.cwd() + '/models/' + fileNameO;
+  if (Configs.generateSingleModel) {
+    const filePath = process.cwd() + '/models/' + fileName;
+    await fs.writeFile(filePath, JSON.stringify(qTableX, null, 2));
+    console.log(`File saved: ${filePath}`);
+  } else {
+    const filePathX = process.cwd() + '/models/' + fileNameX;
+    const filePathO = process.cwd() + '/models/' + fileNameO;
+    await fs.writeFile(filePathX, JSON.stringify(qTableX, null, 2));
+    await fs.writeFile(filePathO, JSON.stringify(qTableO, null, 2));
+    console.log(`File saved: ${filePathX}`);
+    console.log(`File saved: ${filePathO}`);
+  }
 
-  await fs.writeFile(filePathX, JSON.stringify(qTableX, null, 2));
-  await fs.writeFile(filePathO, JSON.stringify(qTableO, null, 2));
-
-  console.log(`File saved: ${filePathX}`);
-  console.log(`File saved: ${filePathO}`);
   console.log('Training completed!');
 }
 

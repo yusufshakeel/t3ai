@@ -9,9 +9,9 @@
     "dist"
   ],
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "sh scripts/server.sh",
     "play": "ts-node src/index.ts",
-    "benchmark": "ts-node src/benchmark.ts",
+    "benchmark": "sh scripts/benchmark.sh",
     "bootstrap": "mkdir -p models",
     "build": "tsup",
     "all": "rm -rf dist && npm run precommit && npm run build",
